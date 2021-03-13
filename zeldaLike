@@ -1,0 +1,1593 @@
+var screenHeight = height;
+var screenWidth = width;
+
+//bricks related global variables
+var brickLines = 8;
+var brickColumns = 8;
+
+var brickW = screenWidth/brickColumns;
+var brickH = screenHeight/brickLines;
+var brickX = 0;
+var brickY = 0;
+
+//player related global variables
+var playerPos = [1, 3];
+var playerH = 30;
+var playerW = 30;
+
+//gems counters
+var blueGemsCounter = 0;
+var greenGemsCounter = 0;
+var orangeGemsCounter = 0;
+
+//pokemon and first evolution booleans
+var pokemon = false;
+var pokemonEvo1 = false;
+
+var textPanel = 0;
+
+var randomPokemon = floor(random(0, 6));
+
+var color1 = color(43, 163, 255);
+var color2 = color(255, 255, 255);
+
+var attackCounter = 0;
+
+var pokemonHp = 60;
+var evo1TotalHp = 120;
+var evo1Hp = evo1TotalHp;
+var npc3PokemonHp = 130;
+var npc3PokemonTotalHp = npc3PokemonHp;
+
+var critChance = 11;
+var criticalHit = floor(random(0,critChance));
+var attack1Dmg = floor(random(15,30));
+var attack2Dmg = floor(random(5,40));
+var enemyAttack = floor(random(0,2));
+var dmg = 1;
+
+//------------------------World arrays----------------------------
+//empty template
+var drawArTemplate = [[0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0]];
+
+var arTemplate = [[0,0,0,0,0,0,0,0],
+                  [0,0,0,0,0,0,0,0],
+                  [0,0,0,0,0,0,0,0],
+                  [0,0,0,0,0,0,0,0],
+                  [0,0,0,0,0,0,0,0],
+                  [0,0,0,0,0,0,0,0],
+                  [0,0,0,0,0,0,0,0],
+                  [0,0,0,0,0,0,0,0]];
+
+
+//_________________________World panels__________________________
+var arWorldPanel1 = [[1,1,1,1,1,0,0,0],
+                     [1,1,1,0,0,0,0,3],
+                     [0,0,0,0,0,0,0,3],
+                     [4,0,0,0,0,0,0,0],
+                     [4,0,0,0,0,0,0,0],
+                     [0,1,0,0,0,0,1,1],
+                     [0,1,0,0,0,1,1,1],
+                     [0,0,0,1,1,1,1,1]];
+
+var drawArWorldPanel1 = [[4,4,4,4,4,0,0,0],
+                         [4,1,4,0,0,8,8,3],
+                         [0,0,0,8,8,8,8,3],
+                         [8,8,8,8,8,8,0,0],
+                         [8,8,8,8,0,0,0,0],
+                         [0,1,0,0,0,0,6,9],
+                         [0,4,0,0,0,6,9,6],
+                         [0,0,0,6,9,6,6,6]];
+
+
+
+var arWorldPanel2 = [[0,0,1,0,1,1,1,1],
+                     [1,0,0,1,1,1,1,1],
+                     [1,1,0,1,1,1,0,1],
+                     [1,1,0,0,0,0,0,3],
+                     [1,0,0,0,0,0,0,3],
+                     [0,0,0,0,0,0,0,0],
+                     [0,0,0,0,0,1,0,1],
+                     [25,0,0,0,1,1,1,0]];
+
+var drawArWorldPanel2 = [[17,0,4,0,1,4,15,4],
+                         [15,0,0,1,4,1,15,15],
+                         [4,15,0,15,4,4,0,15],
+                         [1,1,16,16,0,8,8,8,8],
+                         [15,0,8,8,8,8,8,8],
+                         [0,8,8,8,8,8,0,0],
+                         [8,8,8,0,0,4,0,4],
+                         [8,8,0,0,15,15,1,0]];
+
+
+
+var drawArWorldPanel3 = [[1,15,4,15,4,15,1,8],
+                         [0,26,1,4,1,8,8,8],
+                         [27,0,15,15,8,8,8,4],
+                         [0,15,15,0,8,8,0,16],
+                         [16,0,27,8,8,8,15,0],
+                         [4,1,0,8,8,0,1,27],
+                         [28,4,1,8,8,1,26,0],
+                         [15,1,4,8,8,15,4,1]];
+
+var arWorldPanel3 = [[1,1,1,1,1,1,1,25],
+                     [0,0,1,1,1,0,0,0],
+                     [1,0,1,1,0,0,0,1],
+                     [0,1,1,0,0,0,0,0],
+                     [0,0,1,0,0,0,1,0],
+                     [1,1,0,0,0,0,1,1],
+                     [0,1,1,0,0,1,0,0],
+                     [0,1,1,28,28,1,1,1]];
+
+
+
+var drawArWorldPanel4 = [[1,4,0,8,8,0,1,4],
+                         [15,0,4,8,8,4,26,0],
+                         [0,4,0,8,0,15,27,1],
+                         [0,0,8,1,8,8,16,0],
+                         [4,8,15,0,8,0,8,8],
+                         [0,0,8,8,0,8,1,0],
+                         [1,27,1,8,1,8,8,8],
+                         [8,8,26,1,8,8,1,8]];
+
+var arWorldPanel4 = [[1,1,0,25,25,0,1,1],
+                     [1,0,1,0,0,1,0,0],
+                     [0,1,0,0,0,1,1,1],
+                     [0,0,0,1,0,0,0,0],
+                     [1,0,1,0,0,0,0,0],
+                     [0,0,0,0,0,0,1,0],
+                     [1,1,1,0,1,0,0,0],
+                     [0,0,0,1,0,0,1,0]];
+
+
+
+var drawArWorldPanel5 = [[1,15,1,8,15,0,4,15],
+                         [4,0,0,4,0,1,0,0],
+                         [8,0,8,0,8,4,31,1],
+                         [29,30,30,29,30,29,29,29],
+                         [,,,,,,,],
+                         [9,6,6,6,6,9,6,6],
+                         [6,9,9,6,6,6,9,6],
+                         [6,6,6,6,6,9,6,6]];
+
+var arWorldPanel5 = [[1,1,1,0,1,0,1,1],
+                     [1,0,0,1,0,1,0,7],
+                     [0,0,0,0,0,1,1,1],
+                     [4,0,0,0,0,0,0,0],
+                     [1,1,1,1,1,1,1,1],
+                     [1,1,1,1,1,1,1,1],
+                     [1,1,1,1,1,1,1,1],
+                     [1,1,1,1,1,1,1,1]];
+
+
+//________________________Small city panel_______________________
+var arCity1 = [[0,0,0,1,1,1,1,1],
+               [0,0,0,1,0,0,0,4],
+               [1,1,1,1,0,0,0,0],
+               [0,0,0,0,1,0,0,1],
+               [0,0,0,0,1,1,1,1],
+               [0,0,0,0,0,0,1,1],
+               [0,0,0,0,0,0,1,1],
+               [3,0,0,0,0,1,1,1]];
+
+var drawArCity1 = [[12,12,12,14,1,4,15,1],
+                   [12,12,12,13,5,0,8,0],
+                   [10,11,10,10,0,8,5,8],
+                   [5,5,5,5,23,8,0,9],
+                   [5,5,5,5,23,22,24,6],
+                   [5,5,5,5,5,5,6,6],
+                   [5,5,5,5,5,5,6,6],
+                   [3,5,5,5,5,6,6,6]];
+
+
+//__________________________First house panel____________________
+var arHouse1 = [[1,1,1,1,1,1,1,1],
+                [1,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,1],
+                [1,0,0,0,1,0,0,1],
+                [1,0,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,1],
+                [1,1,1,1,3,1,1,1]];
+
+var drawArHouse1 = [[20,10,10,10,10,10,10,20],
+                    [20,19,19,19,19,19,19,20],
+                    [20,19,7,19,19,19,19,20],
+                    [20,19,19,19,19,19,19,20],
+                    [20,19,19,19,21,19,19,20],
+                    [20,19,19,19,19,19,19,20],
+                    [20,19,19,19,19,19,19,20],
+                    [20,20,20,20,5,20,20,20]];
+
+
+//active panels
+var activePanel = arWorldPanel1;
+var activePanelDraw = drawArWorldPanel1;
+
+//-----------------Tiles, item and NPCs functions----------------
+var grass = function () {
+    image(getImage("cute/GrassBlock"), brickX, brickY-brickH/2-20, brickW+10, brickH*2.2);
+};
+
+var wallRock = function () {
+    image(getImage("cute/Rock"), brickX, brickY-brickH, brickW+10, brickH*2);
+};
+
+var gravelRoad = function () {
+    image(getImage("cute/DirtBlock"),  brickX, brickY-brickH/2-20, brickW+10, brickH*2.2);
+};
+
+var wallTree = function () {
+    image(getImage("cute/TreeShort"), brickX, brickY-brickH/1.2, brickW, brickH*2);
+};
+
+var wallTreeTall = function () {
+    image(getImage("cute/TreeTall"), brickX, brickY-brickH, brickW, brickH*2);
+};
+
+var wallTreeBush = function () {
+    image(getImage("cute/TreeUgly"), brickX, brickY-brickH, brickW, brickH*2);
+};
+
+var blueGem1 = function () {
+    image(getImage("cute/GemBlue"), brickX+brickW/3, brickY, brickW/3, brickH/2);
+};
+
+var key1 = function () {
+    image(getImage("cute/Key"), brickX+brickW/3, brickY, brickW/3, brickH/2);
+};
+
+var firstDoor = function () {
+    image(getImage("cute/RampWest"), brickX, brickY-brickH/2-10, brickW, brickH+6);
+    image(getImage("cute/RampWest"), brickX, brickY-brickH/2+28, brickW, brickH+6);
+};
+
+var stone = function () {
+    image(getImage("cute/StoneBlock"), brickX, brickY-brickH/2-20, brickW+10, brickH*2.2);
+};
+
+var concrete = function () {
+    image(getImage("cute/PlainBlock"), brickX, brickY-brickH/2-20, brickW+10, brickH*2.2);
+};
+
+var water = function () {
+    image(getImage("cute/WaterBlock"), brickX, brickY-brickH/2-20, brickW+10, brickH*2.2);
+};
+
+var upgradeToPokemonTile = function () {
+    image(getImage("cute/Selector"), brickX, brickY-brickH-8, brickW, brickW*2);
+};
+
+var wallSmall = function () {
+    image(getImage("cute/WallBlock"), brickX, brickY-brickH/2-20, brickW+10, brickH*2.2);
+};
+
+var wallTall = function () {
+    image(getImage("cute/WallBlockTall"), brickX, brickY-brickH/2-50, brickW+10, brickH*2.2);
+};
+
+var door = function () {
+    image(getImage("cute/DoorTallClosed"), brickX-5, brickY-brickH/2-30, brickW+10, brickH*2.2);
+};
+
+var doorOpen = function () {
+    image(getImage("cute/DoorTallOpen"), brickX+8, brickY-brickH/2-60, brickW+10, brickH*2.2+50);
+};
+
+var tileSouth = function () {
+    image(getImage("cute/RoofSouth"), brickX, brickY-brickH/2-50, brickW+10, brickH*2.2);
+};
+
+var tileSouthEast = function () {
+    image(getImage("cute/RoofSouthEast"), brickX, brickY-brickH/2-50, brickW+10, brickH*2.2);
+};
+
+var tileEast = function () {
+    image(getImage("cute/RoofEast"), brickX, brickY-brickH/2-50, brickW+10, brickH*2.2);
+};
+
+var houseBg = function () {
+    image(getImage("cute/WoodBlock"), brickX, brickY-brickH/2-20, brickW+10, brickH*2.2);
+};
+
+var window = function () {
+    image(getImage("cute/WindowTall"), brickW-5, brickH-brickH/2-30, brickW+10, brickH*2.2);
+};
+
+var npc1 = function () {
+    image(getImage("cute/CharacterCatGirl"), brickX+7,  brickY-brickH*3/4, brickW-10, brickW*2-20);
+};
+
+var npc2 = function () {
+    image(getImage("cute/CharacterHornGirl"), brickX+7,  brickY-brickH*3/4, brickW-10, brickW*2-20);
+};
+
+var npc3 = function () {
+    image(getImage("cute/CharacterBoy"), brickX+7,  brickY-brickH*3/4, brickW-10, brickW*2-20);
+};
+
+var barrierEast = function () {
+    image(getImage("cute/WallBlock"), brickX-10, brickY-brickH/2-40, brickW+10, brickH*2.2);
+};
+
+var barrierNorth = function () {
+    image(getImage("cute/WallBlock"), brickX-10, brickY-brickH/2-40, brickW+10, brickH*2.2);
+};
+
+var greenGem = function () {
+    image(getImage("cute/GemGreen"), brickX+brickW/3, brickY, brickW/3, brickH/2);
+};
+
+var breakableTree1 = function () {
+    image(getImage("cute/TreeShort"), brickX, brickY-brickH/1.9, brickW/2, brickH);
+    image(getImage("cute/TreeShort"), brickX+45, brickY-brickH/2, brickW/2, brickH);
+    image(getImage("cute/TreeUgly"), brickX+20, brickY-brickH/5, brickW/2, brickH);
+    image(getImage("cute/TreeShort"), brickX+40, brickY-brickH/12, brickW/2, brickH);
+    image(getImage("cute/TreeUgly"), brickX, brickY-brickH/10, brickW/2, brickH);
+    
+};
+
+var orangeGem = function () {
+    image(getImage("cute/GemOrange"), brickX+brickW/3, brickY, brickW/3, brickH/2);
+};
+
+var cliffDirt = function () {
+    image(getImage("cute/DirtBlock"), brickX, brickY-brickH/2-40, brickW+10, brickH*3);
+    image(getImage("cute/DirtBlock"),  brickX, brickY-brickH/2-22, brickW+10, brickH*2.2);
+};
+
+var cliffGrass = function () {
+    image(getImage("cute/GrassBlock"), brickX, brickY-brickH/2-40, brickW+10, brickH*3);
+    image(getImage("cute/GrassBlock"),  brickX, brickY-brickH/2-22, brickW+10, brickH*2.2);
+};
+
+
+//-----------draws of the different layers of the game------------
+var drawBackground = function () {
+    background(0, 0, 0);
+    
+    for (var i = 0; i < brickLines; i++){
+        for (var j = 0; j < brickColumns; j++) {
+            if ((activePanelDraw[i][j] === 0) || (activePanelDraw[i][j] === 1) || (activePanelDraw[i][j] === 2) || (activePanelDraw[i][j] === 4) || (activePanelDraw[i][j] === 15) || (activePanelDraw[i][j] === 16) || (activePanelDraw[i][j] === 17) || (activePanelDraw[i][j] === 26) || (activePanelDraw[i][j] === 27) || (activePanelDraw[i][j] === 28) || (activePanelDraw[i][j] === 31)){
+                grass();
+            } else if (activePanelDraw[i][j] === 3){
+                grass();
+                firstDoor();
+            }else if ((activePanelDraw[i][j] === 5) || (activePanelDraw[i][j] === 22)){
+                stone();
+            } else if ((activePanelDraw[i][j] === 6) || (activePanelDraw[i][j] === 9)){
+                water();
+            } else if (activePanelDraw[i][j] === 7){
+                concrete();
+            } else if (activePanelDraw[i][j] === 8){
+                gravelRoad();
+            } else if (activePanelDraw[i][j] === 10) {
+                wallTall();
+            } else if (activePanelDraw[i][j] === 11) {
+                door();
+            } else if (activePanelDraw[i][j] === 18) {
+                doorOpen();
+            } else if ((activePanelDraw[i][j] === 19) || (activePanelDraw[i][j] === 21)) {
+                houseBg();
+            } else if (activePanelDraw[i][j] === 23) {
+                barrierEast();
+            } else if (activePanelDraw[i][j] === 24) {
+                barrierNorth();
+            } else if (activePanelDraw[i][j] === 29) {
+                cliffDirt();
+            } else if (activePanelDraw[i][j] === 30) {
+                cliffGrass();
+            } 
+            brickX = brickX+brickW;
+        }
+        brickY = brickY+brickH;
+        brickX = 0;
+    }
+    brickY = 0;
+};
+
+var drawItems = function () {
+    for (var i = 0; i < brickLines; i++){
+        for (var j = 0; j < brickColumns; j++) {
+            if (activePanelDraw[i][j] === 2){
+                blueGem1();
+            }  else if (activePanelDraw[i][j] === 7){
+                upgradeToPokemonTile();
+            } else if (activePanelDraw[i][j] === 17){
+                key1();
+            } else if (activePanelDraw[i][j] === 21){
+                npc1();
+            } else if (activePanelDraw[i][j] === 22){
+                npc2();
+            } else if (activePanelDraw[i][j] === 31){
+                npc3();
+            } else if (activePanelDraw[i][j] === 26){
+                greenGem();
+            } else if (activePanelDraw[i][j] === 27){
+                breakableTree1();
+            } else if (activePanelDraw[i][j] === 28){
+                orangeGem();
+            } 
+            brickX = brickX+brickW;
+        }
+        brickY = brickY+brickH;
+        brickX = 0;
+    }
+    brickY = 0;
+};
+
+var drawTallEntities = function () {
+    for (var i = 0; i < brickLines; i++){
+        for (var j = 0; j < brickColumns; j++) {
+            if (activePanelDraw[i][j] === 1){
+                wallRock();
+            } else if (activePanelDraw[i][j] === 4){
+                wallTree();
+            } else if (activePanelDraw[i][j] === 9){
+                wallRock();
+            } else if (activePanelDraw[i][j] === 12) {
+                tileSouth();
+            } else if (activePanelDraw[i][j] === 13) {
+                tileSouthEast();
+            } else if (activePanelDraw[i][j] === 14) {
+                tileEast();
+            } else if (activePanelDraw[i][j] === 15) {
+                wallTreeTall();
+            } else if (activePanelDraw[i][j] === 16) {
+                wallTreeBush();
+            } else if (activePanelDraw[i][j] === 20) {
+                wallSmall();
+            }
+            brickX = brickX+brickW;
+        }
+        brickY = brickY+brickH;
+        brickX = 0;
+    }
+    brickY = 0;
+};
+
+//------------------------Booleans--------------------------------
+var inventoryBool = false;
+var pauseBool = false;
+var moveBool = true;
+
+var mirrorBool = false;
+
+var house1Key = false;
+
+var firstBuildingDone = false;
+
+var npc1DialogBool = false;
+var npc2DialogBool = false;
+var npc3DialogBool = false;
+
+var destroyTrees1Bool = false;
+var destroyTrees2Bool = false;
+
+var attack1Bool = false;
+var attack2Bool = false;
+var damageBool = false;
+var enemyDamageBool = false;
+
+var kombatBool = false;
+
+var soundBool = true;
+
+var kombat1WinBool = false;
+
+var introBool = true;
+
+
+//--------------------mouse and keyboard functions----------------
+mouseClicked = function () {
+    if ((pauseBool === true) && (mouseX > 510) && (mouseX < 540) && (mouseY > 170) && (mouseY < 200) && (soundBool === true)){
+        soundBool = false;
+    } else if ((pauseBool === true) && (mouseX > 510) && (mouseX < 540) && (mouseY > 170) && (mouseY < 200) && (soundBool === false)){
+        soundBool = true;
+    }
+};
+
+mousePressed = function () {
+    if (kombatBool){
+        
+        if (mouseX > brickW && mouseX < brickW*4 && mouseY > brickH * 6 && mouseY < brickH * 7 && !attack2Bool) {
+            if (!attack1Bool){
+                attack1Bool = true;
+                damageBool = true;
+            }
+        }
+        
+        if (mouseX > brickW*4 && mouseX < brickW*8 && mouseY > brickH * 6 && mouseY < brickH * 7 && !attack1Bool) {
+            if (!attack2Bool){
+                attack2Bool = true;
+                damageBool = true;
+            }
+        }
+        
+        
+        /*fill(122);
+        if (mouseIsPressed && mouseX > brickW && mouseX < brickW*4 && mouseY > brickH * 7 && mouseY < brickH * 8) {
+            fill(255, 0, 0);
+        }
+        rect(brickW,brickW*7,brickW *6 /2, brickH);
+        
+        fill(0);
+        if (mouseIsPressed && mouseX > brickW*4 && mouseX < brickW*8 && mouseY > brickH * 7 && mouseY < brickH * 8) {
+            fill(255, 0, 0);
+        }
+        rect(brickW*4,brickW*7,brickW *6 /2, brickH);*/
+    }
+};
+
+keyPressed = function () {
+    
+    if (moveBool) {
+        if ((key.toString() === "z") || (key.toString() === "Z")){
+            if (activePanel[playerPos[1]-1][playerPos[0]] !== 1){
+                playerPos[1] = playerPos[1] - 1;
+                if (soundBool) {
+                    //playSound(getSound("rpg/step-heavy"));
+                }
+            }
+        }
+        if ((key.toString() === "s") || (key.toString() === "S")){
+            if (activePanel[playerPos[1]+1][playerPos[0]] !== 1){
+                playerPos[1] = playerPos[1] + 1;
+                if (soundBool) {
+                    //playSound(getSound("rpg/step-heavy"));
+                }
+            }
+        }
+        if ((key.toString() === "q") || (key.toString() === "Q")){
+            if ((activePanel[playerPos[1]][playerPos[0]-1] !== 1) &&(playerPos[0]-1 > -1)){
+                playerPos[0] = playerPos[0] - 1;
+                if (soundBool) {
+                    //playSound(getSound("rpg/step-heavy"));
+                }
+            }
+        }
+        if ((key.toString() === "d") || (key.toString() === "D")){
+            if ((activePanel[playerPos[1]][playerPos[0]+1] !== 1) && (playerPos[0]+1 < activePanel.length)){
+                playerPos[0] = playerPos[0] + 1;
+                if (soundBool) {
+                    //playSound(getSound("rpg/step-heavy"));
+                }
+            }
+        }
+    }
+    
+    if (key.toString() === "e" || key.toString() === "E"){
+        if (inventoryBool === false) {
+            inventoryBool = true;
+        } else if (inventoryBool) {
+            inventoryBool = false;
+        }
+    }
+    if (key.toString() === "p" || key.toString() === "P"){
+        if (pauseBool === false) {
+            pauseBool = true;
+            moveBool = false;
+        } else if (pauseBool) {
+            pauseBool = false;
+            moveBool = true;
+        }
+    }
+    
+    if (key.toString() === "a" || key.toString() === "A"){
+        if ((activePanelDraw[playerPos[1]-1][playerPos[0]] === 21) || (activePanelDraw[playerPos[1]-1][playerPos[0]] === 22) || (activePanelDraw[playerPos[1]-1][playerPos[0]] === 31) && playerPos[1] > 0 && playerPos[1] < 7){
+            textPanel++;
+        }
+    }
+    
+    /*if (key.code === 32 && npc3DialogBool){
+        Program.restart();
+    }*/
+};
+
+//------------------dialog and inventory arrays-------------------
+//NPC 1 dialogs
+var npc1Dialog1 = ["Oh, you found the key in the woods !","You must be looking to get one of these \ncreatures.","To get one, you must find 2 gems in the \nnearby woods.","Then, you walk on that pedestal, and a \nPokémon chooses you.","You can still try to get one for free, but \nI doubt it'll work."];
+
+var npc1Dialog2 = ["I see you got a Pokémon !","Now, if you want to make it evolve, you have \nto find 4 green gems.","They are probably  at the South West from \nhere.","Good luck !"];
+
+var npc1Dialog3 = ["Oh, your Pokémon evolved !","If you want it to be even stronger, you can't \nmake it evolve here.","The next place where you can make your \nPokémon evolve is at the East from here.","Pay attention on the road, it's quite \ndangerous !"];
+
+//NPC 2 dialogs
+var npc2Dialog1 = ["Hey !","You can't go there.","The road is damaged.","Maybe with an evolved Pokémon, you could \ngo there."];
+
+var npc2Dialog2 = ["Hey !","You can't ...","Wait ...","Your Pokémon looks like it evolved !","Now, you can go on that road","But still, don't do anything that would put \nyour life in danger.","Have a nice travel !"];
+
+//NPC 3 dialog
+var npc3Dialog1 = ["Hey, listen !","If you want to continue, you have to beat me \nto a Pokémon fight !","Prepare yourself !"];
+
+var inventoryContent = [];
+
+//-------------------------Game functions-------------------------
+//draw simple texts
+var drawTexts = function (textToDraw) {
+    fill(255, 255, 255);
+    strokeWeight(5);
+    stroke(0, 0, 0);
+    rect(brickW, brickH * 6, brickW * 6, brickH * 2);
+    fill(0, 0, 0);
+    noStroke();
+    textAlign(LEFT, TOP);
+    text(textToDraw, brickW * 1.2, brickH * 6.1);
+};
+
+var drawKombatBg = function () {
+    for(var i = 0; i < 600; i++){
+    
+        var gradientColor = lerpColor(color1, color2, i/600);
+
+        noStroke();
+        fill(gradientColor);
+        rect(0, i, screenWidth, screenHeight);
+
+    }
+    
+    fill(209, 209, 209);
+    strokeWeight(10);
+    stroke(166, 166, 166);
+    ellipse(450,190,280,100);
+    ellipse(50,470,700,300);
+};
+
+var drawKombatTexts = function () {
+
+    
+    
+    fill(255, 255, 255);
+    strokeWeight(5);
+    stroke(0, 0, 0);
+    rect(brickW, brickH * 6, brickW * 6, brickH * 2);
+    fill(255);
+    textAlign(LEFT, TOP);
+    
+    
+    
+    rect(brickW,brickW*6,brickW *6 /2, brickH);
+    
+    fill(255);
+    if (attack2Bool) {
+        fill(255, 0, 0);
+    }
+    rect(brickW*4,brickW*6,brickW *6 /2, brickH);
+    
+    if (attackCounter >= 17) {
+        attack1Bool = false;
+        attack2Bool = false;
+        
+        attackCounter = 0;
+    }
+    
+    fill(0);
+    textAlign(LEFT,CENTER);
+    text("Attack 1",brickW*2,brickH*6+brickH/2);
+    text("Attack 2",brickW*5,brickH*6+brickH/2);
+    
+    fill(255);
+    stroke(0);
+    strokeWeight(5);
+    rect(-3,50,300,80);
+    fill(0);
+    text("pokemon", 10, 65);
+    text(npc3PokemonHp+" / "+npc3PokemonTotalHp,195,95);
+    
+    fill(255);
+    stroke(0);
+    strokeWeight(5);
+    rect(303,300,300,80);
+    fill(0);
+    text("pokemon", 312, 315);
+    text(evo1Hp+" / "+evo1TotalHp,500,350);
+    
+    if (attack1Bool) {
+        if (criticalHit >= critChance-1) {
+            drawTexts("You use Attack1. Critical hit !");
+        } else {
+            
+            drawTexts("You use Attack1.");
+        }
+    }
+    
+    if (attack2Bool) {
+        if (criticalHit >= critChance-1) {
+            drawTexts("You use Attack2. Critical hit !");
+        } else {
+            
+            drawTexts("You use Attack2.");
+        }
+    }
+    
+    if (attackCounter >= 10) {
+            if (enemyAttack === 0){
+                if (criticalHit >= critChance-1) {
+                    drawTexts("The enemy uses Attack1. Critical hit !");
+                } else {
+                    drawTexts("The enemy uses Attack1.");
+                }
+            } else if (enemyAttack === 1){
+                if (criticalHit >= critChance-1) {
+                    drawTexts("The enemy uses Attack2. Critical hit !");
+                } else {
+                    drawTexts("The enemy uses Attack2.");
+                }
+            }
+    }
+    
+    fill(255);
+    stroke(0);
+    rect(10,95,160,10);
+    rect(320,350,160,10);
+    if (evo1Hp < evo1TotalHp/4) {
+        fill(252, 10, 10);
+    } else if (evo1Hp < evo1TotalHp/2){
+        fill(255, 162, 23);
+    } else {
+        fill(0, 204, 31);
+    }
+    rect(320,350,160 * (evo1Hp/evo1TotalHp),10);
+    
+    if (npc3PokemonHp < npc3PokemonTotalHp/4) {
+        fill(252, 10, 10);
+    } else if (npc3PokemonHp < npc3PokemonTotalHp/2){
+        fill(255, 162, 23);
+    } else {
+        fill(0, 204, 31);
+    }
+    rect(10,95,160 * (npc3PokemonHp/npc3PokemonTotalHp),10);
+};
+
+
+//draw dialog panels
+var drawDialogs = function (textToDraw) {
+    fill(255, 255, 255);
+    strokeWeight(5);
+    stroke(0, 0, 0);
+    rect(brickW, brickH * 6, brickW * 6, brickH * 2);
+    fill(0, 0, 0);
+    noStroke();
+    textAlign(LEFT, TOP);
+    text(textToDraw, brickW * 1.2, brickH * 6.1);
+    text("A",brickW*6.5,brickH*7.6);
+    triangle(brickW*6.7,brickH*7.7,brickW*6.9,brickH*7.7,brickW*6.8,brickH*7.9);
+};
+
+//get an item
+var getItem = function (){
+    if (activePanelDraw[playerPos[1]][playerPos[0]] === 2){
+        blueGemsCounter++;
+        activePanel[playerPos[1]][playerPos[0]] = 0;
+        activePanelDraw[playerPos[1]][playerPos[0]] = 0;
+        if (soundBool){
+            //playSound(getSound("rpg/metal-chime"));
+        }
+        
+        inventoryContent[0] = 2;
+    }
+    
+    if (activePanelDraw[playerPos[1]][playerPos[0]] === 17){
+        house1Key = true;
+        activePanelDraw[playerPos[1]][playerPos[0]] = 0;
+        if (soundBool){
+            //playSound(getSound("rpg/metal-chime"));
+        }
+        
+        inventoryContent[1] = 17;
+    }
+    
+    if (activePanelDraw[playerPos[1]][playerPos[0]] === 26){
+        greenGemsCounter++;
+        activePanelDraw[playerPos[1]][playerPos[0]] = 0;
+        if (soundBool){
+            //playSound(getSound("rpg/metal-chime"));
+        }
+        
+        inventoryContent[2] = 26;
+    }
+    if (activePanelDraw[playerPos[1]][playerPos[0]] === 28){
+        orangeGemsCounter++;
+        activePanelDraw[playerPos[1]][playerPos[0]] = 0;
+        if (soundBool){
+            //playSound(getSound("rpg/metal-chime"));
+        }
+        
+        inventoryContent[3] = 28;
+    }
+};
+
+//inventory with items, pokémon and pokémon ability
+var inventory = function() {
+    fill(255, 255, 255);
+    strokeWeight(5);
+    stroke(0, 0, 0);
+    rect(brickX, brickH, brickW * 8, brickH * 6);
+    fill(0, 0, 0);
+    textAlign(CENTER, CENTER);
+    text("Inventory", width/2, brickH+15);
+    
+    
+
+    if ((inventoryContent[0] === 2) && (blueGemsCounter >= 0)){
+        text("Blue Gems", 195, 170);
+        
+        pushMatrix();
+        translate(140, 170);
+        scale(1.5);
+        blueGem1();
+        popMatrix();
+        
+        text(blueGemsCounter, 195, 240);
+    }
+    if ((inventoryContent[2] === 26) && (greenGemsCounter >= 0)){
+        text("Green Gems", 65, 280);
+        
+        pushMatrix();
+        translate(10, 280);
+        scale(1.5);
+        greenGem();
+        popMatrix();
+        
+        text(greenGemsCounter, 65, 350);
+    }
+    if ((inventoryContent[3] === 28) && (greenGemsCounter >= 0)){
+        text("Orange Gems", 195, 280);
+        
+        pushMatrix();
+        translate(140, 280);
+        scale(1.5);
+        orangeGem();
+        popMatrix();
+        
+        text(orangeGemsCounter, 195, 350);
+    }
+    if (inventoryContent[1] === 17){
+        text("House Key", 65, 170);
+        
+        pushMatrix();
+        translate(10, 170);
+        scale(1.5);
+        key1();
+        popMatrix();
+    }
+    if (pokemon === true){
+        if (randomPokemon === 0){
+        image(getImage("avatars/aqualine-seedling"), width/2+50,  190, 200, 200);
+        text("Aqualine", width/1.3, 170);
+        } else if (randomPokemon === 1){
+            image(getImage("avatars/duskpin-seedling"), width/2+50,  190, 200, 200);
+            text("Duskpin", width/1.3, 170);
+        }else if (randomPokemon === 2){
+            image(getImage("avatars/leafers-seedling"), width/2+50,  190, 200, 200);
+            text("Leafers", width/1.3, 170);
+        } else if (randomPokemon === 3){
+            image(getImage("avatars/piceratops-seedling"), width/2+50,  190, 200, 200);
+            text("Piceratops", width/1.3, 170);
+        } else if (randomPokemon === 4){
+            image(getImage("avatars/primosaur-seedling"), width/2+50,  190, 200, 200);
+            text("Primosaur", width/1.3, 170);
+        } else if (randomPokemon === 5){
+            image(getImage("avatars/starky-seedling"), width/2+50,  190, 200, 200);
+            text("Starky", width/1.3, 170);
+        }
+        text("Can destroy small bushes",450, 440);
+    }
+    
+    if (pokemonEvo1 === true){
+        if (randomPokemon === 0){
+        image(getImage("avatars/aqualine-tree"), width/2+50,  190, 200, 200);
+        text("Aqualia", width/1.3, 170);
+        } else if (randomPokemon === 1){
+            image(getImage("avatars/duskpin-tree"), width/2+50,  190, 200, 200);
+            text("Duskish", width/1.3, 170);
+        }else if (randomPokemon === 2){
+            image(getImage("avatars/leafers-tree"), width/2+50,  190, 200, 200);
+            text("Leafing", width/1.3, 170);
+        } else if (randomPokemon === 3){
+            image(getImage("avatars/piceratops-tree"), width/2+50,  190, 200, 200);
+            text("Piceraptor", width/1.3, 170);
+        } else if (randomPokemon === 4){
+            image(getImage("avatars/primosaur-tree"), width/2+50,  190, 200, 200);
+            text("Primosaurus", width/1.3, 170);
+        } else if (randomPokemon === 5){
+            image(getImage("avatars/starky-tree"), width/2+50,  190, 200, 200);
+            text("Starkal", width/1.3, 170);
+        }
+        text("Can destroy some small trees",450, 440);
+
+    }
+    
+};
+
+//pause menu
+var pause = function () {
+    fill(255, 255, 255);
+    strokeWeight(5);
+    stroke(0, 0, 0);
+    rect(brickX, brickH, brickW * 8, brickH * 6);
+    fill(0, 0, 0);
+    textAlign(CENTER, CENTER);
+    text("Game Paused", width/2, brickH+15);
+    
+    text("Controls", 150, 150);
+    text("Options", 450, 150);
+    
+    textAlign(LEFT, BASELINE);
+    text("Go up : ", 10, 190);
+    text("Go down :", 10, 220);
+    text("Go left :", 10, 250);
+    text("Go right :", 10, 280);
+    text("Inventory :", 10, 310);
+    text("Pause :", 10, 340);
+    
+    
+    text("Z", 190, 190);
+    text("S", 190, 220);
+    text("Q", 190, 250);
+    text("D", 190, 280);
+    text("E", 190, 310);
+    text("P", 190, 340);
+    
+    text("Sound effects : ", 350, 190);
+    
+    if (soundBool === false) {
+        fill(255, 255, 255);
+    } else {
+        fill(0);
+    }
+    rect(510, 170, 30, 30);
+    
+    
+};
+
+var endGame = function () {
+    background(0);
+    moveBool = false;
+    
+    fill(255);
+    textSize(30);
+    textAlign(CENTER, CENTER);
+    text("Thanks for playing !", width/2, height/3);
+    textSize(25);
+    text("The game is over ...", width/2,height/2.4);
+    textSize(20);
+    text("for the moment", width/2, height/2.1);
+    text("Click to restart the game", width/2, 450);
+    
+    if (mouseIsPressed) {
+        Program.restart();
+    }
+};
+
+//__________________pokemon related functions____________________
+
+//get pokémon depending on randomPokemon value
+var getPokemon = function (){
+    if (randomPokemon === 0){
+        image(getImage("avatars/aqualine-seedling"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    } else if (randomPokemon === 1){
+        image(getImage("avatars/duskpin-seedling"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    }else if (randomPokemon === 2){
+        image(getImage("avatars/leafers-seedling"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    } else if (randomPokemon === 3){
+        image(getImage("avatars/piceratops-seedling"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    } else if (randomPokemon === 4){
+        image(getImage("avatars/primosaur-seedling"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    } else if (randomPokemon === 5){
+        image(getImage("avatars/starky-seedling"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    }
+};
+
+//get first evolution
+var getPokemonEvo1 = function () {
+    if (randomPokemon === 0){
+        image(getImage("avatars/aqualine-tree"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    } else if (randomPokemon === 1) {
+        image(getImage("avatars/duskpin-tree"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.7, playerH*1.7);
+    } else if (randomPokemon === 2) {
+        image(getImage("avatars/leafers-tree"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    } else if (randomPokemon === 3) {
+        image(getImage("avatars/piceratops-tree"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    } else if (randomPokemon === 4) {
+        image(getImage("avatars/primosaur-tree"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.3, playerH*1.3);
+    } else if (randomPokemon === 5) {
+        image(getImage("avatars/starky-tree"), brickW*(playerPos[0])+brickW*4/7,  brickH*(playerPos[1])+brickH*2/7, playerW*1.5, playerH*1.5);
+    }
+};
+
+var npc3Pokemon = function () {
+    image(getImage("avatars/aqualine-tree"),350,10,200,200);
+};
+
+//get first pokémon
+var upgradeToPokemon = function (){
+    
+    if ((activePanel === arHouse1) && (drawArHouse1[playerPos[1]][playerPos[0]] === 7 ) && (blueGemsCounter >= 2) && (pokemonEvo1 === false)){
+        blueGemsCounter = blueGemsCounter - 2;
+        pokemon = true;
+        
+        if (soundBool){
+            //playSound(getSound("rpg/battle-spell"));
+        }
+    } else if ((activePanel === arHouse1) && (drawArHouse1[playerPos[1]][playerPos[0]] === 7 ) && (pokemon === false) && (pokemonEvo1 === false)) {
+        drawTexts("You need "+(2-blueGemsCounter)+" more blue gem(s) to get the \nPokémon");
+    } 
+    
+    else if ((activePanel === arHouse1) && (pokemon) && (drawArHouse1[playerPos[1]][playerPos[0]] === 7) && (pokemonEvo1 === false)) {
+        if (greenGemsCounter < 4){
+            drawTexts("You need "+(4-greenGemsCounter)+" more green gem(s) to evolve your \nPokémon" );
+        } else if (greenGemsCounter >= 4){
+            greenGemsCounter = greenGemsCounter - 4;
+            pokemon = false;
+            pokemonEvo1 = true;
+            
+            if (soundBool){
+                //playSound(getSound("rpg/battle-spell"));
+            }
+        }
+    }
+    
+    
+};
+
+//destroy bushes when pokemon unlocked
+var destroyTrees1 = function () {
+    if ((activePanel === arWorldPanel3) || (activePanel === arWorldPanel4) && (playerPos[1] > 0) && (playerPos[1] < 7)){
+        
+        if ((activePanelDraw[playerPos[1]][playerPos[0]-1] === 27) && pokemon){
+            activePanelDraw[playerPos[1]][playerPos[0]-1] = 0;
+            activePanel[playerPos[1]][playerPos[0]-1] = 0;
+            
+            destroyTrees1Bool = false;
+
+        }  
+        else if (activePanelDraw[playerPos[1]+1][playerPos[0]] === 27 && pokemon) {
+            
+            activePanelDraw[playerPos[1]+1][playerPos[0]] =0;
+            activePanel[playerPos[1]+1][playerPos[0]] = 0;
+            
+            destroyTrees1Bool = false;
+            
+        } 
+        else if (activePanelDraw[playerPos[1]-1][playerPos[0]] === 27 && pokemon) {
+            activePanelDraw[playerPos[1]-1][playerPos[0]] =0;
+            activePanel[playerPos[1]-1][playerPos[0]] = 0;
+            
+            destroyTrees1Bool = false;
+
+        }
+           
+    }
+};
+
+//destroy some trees when evo1 unlocked
+var destroyTrees2 = function () {
+    if ((activePanel === arWorldPanel3) && (playerPos[1] > 0) && (playerPos[1] < 7)){
+        
+        if ((activePanelDraw[playerPos[1]][playerPos[0]-1] === 4) && pokemonEvo1){
+            activePanelDraw[playerPos[1]][playerPos[0]-1] = 0;
+            activePanel[playerPos[1]][playerPos[0]-1] = 0;
+            
+            destroyTrees1Bool = false;
+
+        }  
+        else if (activePanelDraw[playerPos[1]+1][playerPos[0]] === 4 && pokemonEvo1 && (playerPos[1] < 7)) {
+            
+            activePanelDraw[playerPos[1]+1][playerPos[0]] =0;
+            activePanel[playerPos[1]+1][playerPos[0]] = 0;
+            
+            destroyTrees1Bool = false;
+            
+        } 
+        else if (activePanelDraw[playerPos[1]-1][playerPos[0]] === 4 && pokemonEvo1) {
+            activePanelDraw[playerPos[1]-1][playerPos[0]] =0;
+            activePanel[playerPos[1]-1][playerPos[0]] = 0;
+            
+            destroyTrees1Bool = false;
+
+        }
+           
+    }
+};
+
+var kombat = function () {
+    
+    if (attack1Bool || attack2Bool){
+        attackCounter = attackCounter + 0.1;
+        
+        if (attack1Bool && damageBool) {
+            if (criticalHit >= critChance-1) {
+                npc3PokemonHp = npc3PokemonHp - (attack1Dmg*2);
+                drawTexts("You use Attack1. Critical hit !");
+                criticalHit = floor(random(0,critChance));
+                dmg = attack1Dmg*2;
+            } else {
+                npc3PokemonHp = npc3PokemonHp - attack1Dmg;
+                drawTexts("You use Attack1.");
+                dmg = attack1Dmg;
+            }
+            damageBool = false;
+            enemyDamageBool = true;
+            attack1Dmg = floor(random(15,30));
+            enemyAttack = floor(random(0,2));
+            criticalHit = floor(random(0,critChance));
+
+        }
+        if (attack2Bool && damageBool) {
+            if (criticalHit >= critChance-1) {
+                npc3PokemonHp = npc3PokemonHp - (attack2Dmg*2);
+                drawTexts("You use Attack2. Critical hit !");
+                criticalHit = floor(random(0,critChance));
+                dmg = attack2Dmg*2;
+            } else {
+                npc3PokemonHp = npc3PokemonHp - attack2Dmg;
+                drawTexts("You use Attack2.");
+                dmg = attack2Dmg;
+            }
+            damageBool = false;
+            enemyDamageBool = true;
+            attack2Dmg = floor(random(5,40));
+            enemyAttack = floor(random(0,2));
+            criticalHit = floor(random(0,critChance));
+        }
+        
+        if (attackCounter >= 10 && enemyDamageBool) {
+            if (enemyAttack === 0){
+                if (criticalHit >= critChance-1) {
+                    evo1Hp = evo1Hp - (attack1Dmg*2);
+                    dmg = attack1Dmg*2;
+                    criticalHit = floor(random(0,critChance));
+                } else {
+                    evo1Hp = evo1Hp - attack1Dmg;
+                    dmg = attack1Dmg;
+                }
+            } else if (enemyAttack === 1){
+                if (criticalHit >= critChance-1) {
+                    evo1Hp = evo1Hp - (attack2Dmg*2);
+                    criticalHit = floor(random(0,critChance));
+                    dmg = attack2Dmg*2;
+                } else {
+                    evo1Hp = evo1Hp - attack2Dmg;
+                    dmg = attack2Dmg;
+                }
+            }
+            enemyDamageBool = false;
+        }
+    }
+    
+    if (npc3PokemonHp <= 0 || evo1Hp <= 0 && attackCounter > 16) {
+        kombatBool = false;
+        moveBool = true;
+        
+        if (npc3PokemonHp <= 0){
+            npc3DialogBool = false;
+            kombat1WinBool = true;
+            
+            arWorldPanel5[2][6] = 0;
+            drawArWorldPanel5[2][6] = 0;
+            
+            arWorldPanel5[1][4] = 1;
+            drawArWorldPanel5[1][4] = 31;
+        }
+    }
+    
+};
+
+//combat starts
+var kombatStart = function () {
+    
+    kombatBool = true;
+    moveBool = false;
+    
+    drawKombatBg();
+    
+    if (npc3DialogBool){
+        npc3Pokemon();
+    }
+    
+    //popMatrix();
+    //scale(-1,1);
+    if (randomPokemon === 0){
+        image(getImage("avatars/aqualine-tree"), -100,150, 500,500);
+    } else if (randomPokemon === 1) {
+        image(getImage("avatars/duskpin-tree"), -100,150, 500,500);
+    } else if (randomPokemon === 2) {
+        image(getImage("avatars/leafers-tree"), -100,150, 500,500);
+    } else if (randomPokemon === 3) {
+        image(getImage("avatars/piceratops-tree"), -100,150, 500,500);
+    } else if (randomPokemon === 4) {
+        image(getImage("avatars/primosaur-tree"), -100,150, 500,500);
+    } else if (randomPokemon === 5) {
+        image(getImage("avatars/starky-tree"), -100,150, 500,500);
+    }
+    //scale(-1,1);
+    //pushMatrix();
+    
+    
+    
+    kombat();
+    drawKombatTexts();
+    
+    
+};
+
+var kombat1Win = function () {
+    if (kombat1WinBool &&  arWorldPanel5[playerPos[1]][playerPos[0]] === 7) {
+        endGame();
+    }
+};
+
+//_________________________NPC related functions_________________
+//things to do in first building
+var inFirstBuilding = function () {
+    if ((activePanel === arHouse1) && (activePanelDraw[playerPos[1]-1][playerPos[0]] === 21) && (npc1DialogBool === false) && (pokemon === false) && (pokemonEvo1 === false)){
+        
+        if (textPanel < npc1Dialog1.length){
+            drawDialogs(npc1Dialog1[textPanel]);
+        } else {
+            npc1DialogBool = true;
+            textPanel = 0;
+        }
+    }
+    if ((activePanel === arHouse1) && (activePanelDraw[playerPos[1]-1][playerPos[0]] === 21) && (npc1DialogBool === false) && (pokemon) && (pokemonEvo1 === false)){
+        
+        if (textPanel < npc1Dialog2.length){
+            drawDialogs(npc1Dialog2[textPanel]);
+        } else {
+            npc1DialogBool = true;
+            textPanel = 0;
+        }
+    }
+    if ((activePanel === arHouse1) && (activePanelDraw[playerPos[1]-1][playerPos[0]] === 21) && (npc1DialogBool === false) && (pokemon === false) && (pokemonEvo1 === true)){
+        
+        if (textPanel < npc1Dialog3.length){
+            drawDialogs(npc1Dialog3[textPanel]);
+        } else {
+            npc1DialogBool = true;
+            textPanel = 0;
+        }
+    }
+    
+    if ((npc1DialogBool) && (activePanelDraw[playerPos[1]-1][playerPos[0]] !== 21)){
+        textPanel = 0;
+    }
+    
+};
+
+//change position of NPC 1 after talking to it
+var npc1ChangePos = function () {
+    if (npc1DialogBool){
+        drawArHouse1[4][4] = 19;
+        arHouse1[4][4] = 0;
+        drawArHouse1[1][6] = 21;
+        arHouse1[1][6] = 1;
+    }
+};
+
+//things to do in city
+var inCity = function () {
+    
+    if ((activePanel === arCity1) && (activePanelDraw[playerPos[1]-1][playerPos[0]] === 22) && (npc2DialogBool === false) && (pokemonEvo1 === false)){
+    
+        if (textPanel < npc2Dialog1.length){
+            drawDialogs(npc2Dialog1[textPanel]);
+        } else {
+            npc2DialogBool = true;
+            textPanel = 0;
+        }
+    }
+    
+    if ((activePanel === arCity1) && (activePanelDraw[playerPos[1]-1][playerPos[0]] === 22) && (npc2DialogBool === false) && (pokemonEvo1)){
+    
+        if (textPanel < npc2Dialog2.length){
+            drawDialogs(npc2Dialog2[textPanel]);
+        } else {
+            npc2DialogBool = true;
+            textPanel = 0;
+        }
+    }
+    
+    if ((npc2DialogBool) && (activePanelDraw[playerPos[1]-1][playerPos[0]] !== 22)){
+        textPanel = 0;
+    }
+};
+
+//change position of NPC 2 after talking to it and getting evo1
+var npc2ChangePos = function () {
+    if (npc2DialogBool && pokemonEvo1){
+        drawArCity1[2][6] = 22;
+        arCity1[2][6] = 1;
+        drawArCity1[4][5] = 5;
+        arCity1[4][5] = 0;
+    }
+};
+
+
+var npc3Dialog = function () {
+    if ((npc3DialogBool === false) && (activePanel === arWorldPanel5) && (activePanelDraw[playerPos[1]-1][playerPos[0]] === 31)) {
+        
+        if (textPanel < npc3Dialog1.length){
+            drawDialogs(npc3Dialog1[textPanel]);
+        } else {
+            npc3DialogBool = true;
+            kombatBool = true;
+            textPanel = 0;
+        }
+    }
+    
+    if ((npc3DialogBool) && (activePanelDraw[playerPos[1]-1][playerPos[0]] !== 31)){
+        textPanel = 0;
+    }
+};
+
+
+//-----------------------other functions 1------------------------
+//conditions to go in first building
+var goInFirstBuilding = function () {
+    if ((activePanel === arCity1) && (playerPos[1] > 0) && (drawArCity1[playerPos[1]-1][playerPos[0]] === 11 ) && (house1Key === false)){
+        drawTexts("I should find the key instead of trying to \nforce the door.");
+    } else if ((activePanel === arCity1) && (drawArCity1[playerPos[1]-1][playerPos[0]] === 11 ) && (house1Key === true)) {
+        drawArCity1[2][1] = 18;
+        arCity1[2][1] = 0;
+        firstBuildingDone = true;
+    }
+};
+
+//place blue gems when player went in building 1
+var popBlueGems = function () {
+    if (firstBuildingDone) {
+        drawArWorldPanel1[7][2] = 2;
+        drawArWorldPanel2[7][2] = 2;
+        firstBuildingDone = false;
+    }
+};
+
+//--------------------------Draw functions------------------------
+//draw the player
+var playerDraw = function () {
+    image(getImage("cute/CharacterPinkGirl"), brickW*(playerPos[0]+0.1),  brickH*(playerPos[1])-brickH*3/4, brickW-10, brickW*2-20);
+};
+
+//tests what world to draw
+var worldToDraw = function () {
+    drawBackground();
+    
+    
+    if ((activePanel === arWorldPanel1) && (arWorldPanel1[playerPos[1]][playerPos[0]] === 3)){
+        activePanel = arCity1;
+        activePanelDraw = drawArCity1;
+        playerPos = [1, 7];
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+    } 
+    if ((activePanel === arWorldPanel1) && (arWorldPanel1[playerPos[1]][playerPos[0]] === 4)){
+        activePanel = arWorldPanel2;
+        activePanelDraw = drawArWorldPanel2;
+        playerPos = [6, 3];
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+    } 
+    if ((activePanel === arCity1) && (arCity1[playerPos[1]][playerPos[0]] === 3)){
+        playerPos = [6, 1];
+        activePanel = arWorldPanel1;
+        activePanelDraw = drawArWorldPanel1;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+        if (npc2DialogBool){
+            npc2DialogBool = false;
+        }
+    }
+    if ((activePanel === arCity1) && (arCity1[playerPos[1]][playerPos[0]] === 4)){
+        playerPos = [1, 3];
+        activePanel = arWorldPanel5;
+        activePanelDraw = drawArWorldPanel5;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+        if (npc2DialogBool){
+            npc2DialogBool = false;
+        }
+    }
+    if ((activePanel === arWorldPanel5) && (arWorldPanel5[playerPos[1]][playerPos[0]] === 4)){
+        playerPos = [6, 1];
+        activePanel = arCity1;
+        activePanelDraw = drawArCity1;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+        if (npc3DialogBool) {
+            npc3DialogBool = false;
+        }
+        if (npc2DialogBool) {
+            npc2DialogBool = false;
+        }
+    }
+    if ((activePanel === arWorldPanel2) && (arWorldPanel2[playerPos[1]][playerPos[0]] === 3)){
+        playerPos = [1, 3];
+        activePanel = arWorldPanel1;
+        activePanelDraw = drawArWorldPanel1;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+    }
+    if ((activePanel === arCity1) && (drawArCity1[playerPos[1]][playerPos[0]] === 18)){
+        playerPos = [4, 6];
+        activePanel = arHouse1;
+        activePanelDraw = drawArHouse1;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+        if (npc2DialogBool){
+            npc2DialogBool = false;
+        }
+        
+    }
+    if ((activePanel === arHouse1) && (arHouse1[playerPos[1]][playerPos[0]] === 3)){
+        playerPos = [1, 3];
+        activePanel = arCity1;
+        activePanelDraw = drawArCity1;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+        if (npc1DialogBool){
+            npc1DialogBool = false;
+        }
+    }
+    if ((activePanel === arWorldPanel2) && (arWorldPanel2[playerPos[1]][playerPos[0]] === 25)){
+        playerPos = [6, 1];
+        activePanel = arWorldPanel3;
+        activePanelDraw = drawArWorldPanel3;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+    }
+    if ((activePanel === arWorldPanel3) && (arWorldPanel3[playerPos[1]][playerPos[0]] === 25)){
+        playerPos = [1, 6];
+        activePanel = arWorldPanel2;
+        activePanelDraw = drawArWorldPanel2;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+    }
+    if ((activePanel === arWorldPanel3) && (arWorldPanel3[playerPos[1]][playerPos[0]] === 28)){
+        playerPos = [3, 1];
+        activePanel = arWorldPanel4;
+        activePanelDraw = drawArWorldPanel4;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+    }
+    if ((activePanel === arWorldPanel4) && (arWorldPanel4[playerPos[1]][playerPos[0]] === 25)){
+        playerPos = [3, 6];
+        activePanel = arWorldPanel3;
+        activePanelDraw = drawArWorldPanel3;
+        drawBackground(activePanelDraw);
+        if (soundBool){
+            //playSound(getSound("retro/jump2"));
+        }
+    }
+    
+};
+
+//------------------------other functions 2-----------------------
+//debug texts
+var debugTools = function () {
+    fill(0, 0, 0);
+    textAlign(LEFT, TOP);
+    //text(playerPos, 10, 10);
+    //text("Blue Gems : "+blueGemsCounter, 10, height-20);
+    //text(inventoryContent, 10, 100);
+    //text(soundBool, 10, 30);
+    //text(pauseBool, 10, 60);
+    //text(npc2DialogBool, 10, 30);
+    //text("early beta", 490, 10);
+    //text(textPanel, 10, 70);
+    //text(npc3DialogBool, 10, 50);
+    //text(destroyTrees1Bool,10,70);
+    //text(attack1Bool,10,50);
+    //text(attack2Bool,10,70);
+    //text(attackCounter,10,90);
+    //text(kombatBool,10,30);
+    //text(moveBool,10,50);
+    //text(enemyAttack,50,10);
+    //text(kombat1WinBool, 10, 30);
+    //ce truc est buggé parce que why not
+    //text(drawArHouse1[playerPos[1]-1][playerPos[0]],10,70);
+};
+
+var intro = function () {
+    background(0, 0, 0);
+    textFont(createFont("cursive"), 20);
+    textAlign(CENTER, TOP);
+    textSize(54);
+    text("New_Game.exe",width/2,120);
+    textSize(20);
+    text("A heroine arrives in a strange region. \nHer objective is to find a Pokémon to do things.\n \n \n \n Click to continue \n\nPress P for pause and options", screenWidth/2, screenHeight/2-50);
+    if (introBool && mouseIsPressed){
+        introBool = false;
+    }
+};
+
+//-------------------------other draw functions-------------------
+var setup = function () {
+    if (introBool) {
+    intro();
+    frameRate(30);
+    }
+    
+    if (introBool === false) {
+
+        worldToDraw();
+        drawItems();
+        playerDraw();
+        if (pokemon){
+            getPokemon();
+        }
+        if (pokemonEvo1){
+            getPokemonEvo1();
+        }
+        
+        drawTallEntities();
+        
+        popBlueGems();
+        getItem();
+        upgradeToPokemon();
+        
+        goInFirstBuilding();
+        npc1ChangePos();
+        inFirstBuilding();
+        npc2ChangePos();
+        inCity();
+        npc3Dialog();
+        
+        destroyTrees1();
+        destroyTrees2();
+        
+        if(kombatBool){
+            kombatStart();
+        }
+        kombat1Win();
+        
+        if (inventoryBool) {
+            inventory();
+        }
+        if (pauseBool) {
+            pause();
+        }
+        
+        
+        
+        //debug
+        //debugTools();
+        
+    }
+};
+
+var draw = function() {
+    
+    setup();
+    
+    
+};
