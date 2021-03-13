@@ -1,0 +1,195 @@
+var screenWidth = width;
+var screenHeight = height;
+
+var p1Score = 0;
+var p2Score = 0;
+
+var gameFinished = false;
+var totalWins = 10;
+
+//remettre les variables globales dans une fonction setup, qu'on appelle quand game over 
+
+//Vitesse des pads
+var padSpeed = 10;
+
+//Positions et dimensions de la balle
+var ballX = screenWidth/2;
+var ballY = screenHeight/2;
+var ballRadius = 20;
+var ballDirectionX = 2;
+var ballDirectionY = 1;
+var ballSpeed = 3;
+
+//Positions et dimensions du pad 1
+var p1PadX = 10;
+var p1PadY = (screenHeight/2)-(80/2);
+var p1PadW = 15;
+var p1PadH = 80;
+
+//positions et dimensions du pad 2
+var p2PadX = screenWidth - 25;
+var p2PadY = (screenHeight/2)-(80/2);
+var p2PadW = 15;
+var p2PadH = 80;
+
+//Direction des pads
+var p1DirectionY = 0;
+var p2DirectionY = 0;
+
+//Récupérer les touches enfoncées
+keyPressed = function() {
+    if (key.toString() === 'z'){
+        p1DirectionY = -1;
+    }
+    if (key.toString() === 's'){
+        p1DirectionY = 1;
+    }
+    if (key.toString() === 'p'){
+        p2DirectionY = -1;
+    }
+    if (key.toString() === 'm'){
+        p2DirectionY = 1;
+    }
+};
+
+//Récupérer les touches relachées
+keyReleased = function() {
+    if (key.toString() === 'z'){
+        p1DirectionY = 0;
+    }
+    if (key.toString() === 's'){
+        p1DirectionY = 0;
+    }
+    if (key.toString() === 'p'){
+        p2DirectionY = 0;
+    }
+    if (key.toString() === 'm'){
+        p2DirectionY = 0;
+    }
+};
+
+//calculer les nouvelles positions en fonction des directions et de la vitesse
+var adjustPosition = function() {
+    //positions en Y des raquettes + direction * vitesse
+    p1PadY = p1PadY+(p1DirectionY * padSpeed);
+    p2PadY = p2PadY+(p2DirectionY * padSpeed);
+    
+    //position en X et Y de la balle 
+    ballX = ballX + (ballDirectionX * ballSpeed);
+    ballY = ballY + (ballDirectionY * ballSpeed);
+    
+    //teste si la balle touche le coté droit
+    if (ballX+ballRadius/2 >= screenHeight) {
+        ballDirectionX = -1 * ballDirectionX;
+        p1Score++;
+    }
+    //teste si la balle touche le coté gauche
+    if (ballX-ballRadius/2 <= 0) {
+        ballDirectionX = -1 * ballDirectionX;
+        p2Score++;
+    }
+    //teste si la balle touche le haut
+    if (ballY+ballRadius/2 >= screenHeight) {
+        ballDirectionY = -1 * ballDirectionY;
+    }
+    //teste si la balle touche le bas
+    if (ballY-ballRadius/2 <= 0) {
+        ballDirectionY = -1 * ballDirectionY;
+    }
+    
+    //Test si la balle touche le pad 2
+    if ((ballX+ballRadius/2 >= p2PadX) && (ballY >= p2PadY) && (ballY <= p2PadY+p2PadH)){
+        ballDirectionX = -1 * ballDirectionX;
+    }
+    
+    //test si la balle touche le pad 1
+    if ((ballX-ballRadius/2 <= p1PadX+p1PadW) && (ballY >= p1PadY) && (ballY <= p1PadY+p2PadH)){
+        ballDirectionX = -1 * ballDirectionX;
+    }
+};
+
+//dessine le score du joueur 1
+var drawP1Score = function() {
+    fill(255);
+    text(p1Score, screenWidth/2-30, 20);
+};
+
+//dessine le score du joueur 2
+var drawP2Score = function() {
+    fill(255);
+    text(p2Score, screenWidth/2+18, 20);
+};
+
+//dessiner le pad 1
+var drawPad1 = function() {
+    fill(255, 0, 0);
+    rect(p1PadX, p1PadY, p1PadW, p1PadH);
+};
+
+//dessiner le pad 2
+var drawPad2 = function() {
+    fill(0, 255, 0);
+    rect(p2PadX, p2PadY, p2PadW, p2PadH);
+};
+
+//dessiner la balle
+var drawBall = function() {
+    fill(255, 122, 255);
+    ellipse(ballX, ballY, ballRadius, ballRadius);
+};
+
+//Regarde quel joueur a gagné
+var gameOver = function() {
+    //vérifie si le j1 a le score maximal
+    if (p1Score >= totalWins){
+        //arrête la balle
+        ballDirectionX = 0;
+        ballDirectionY = 0;
+        //met le booléen de la partie terminée à true
+        gameFinished = true;
+        //affiche qui a gagné
+        text("P1 WINS", screenWidth/2-20, screenHeight/2-10);
+        //affiche l'instruction pour relancer une partie
+        text("CLICK TO RESTART", screenWidth/2-50, screenHeight/2+10);
+    }
+    //vérifie si le j2 a le score maximal
+    if (p2Score >= totalWins){
+        //arrête la balle
+        ballDirectionX = 0;
+        ballDirectionY = 0;
+        //met le booléen de la partie terminée à true
+        gameFinished = true;
+        //affiche qui a gagné
+        text("P2 WINS", screenWidth/2-30, screenHeight/2-10);
+        //affiche l'instruction pour relancer une partie
+        text("CLICK TO RESTART", screenWidth/2-50, screenHeight/2+10);
+    }
+};
+
+//affichage
+var draw = function() {
+    //dessiner le fond
+    background(0, 0, 0);
+    //dessiner la ligne au milieu
+    fill(122);
+    rect(screenWidth/2-5, 0, 10, screenHeight);
+    //calculs des positions des pads + balle
+    adjustPosition();
+    //dessiner le pad 1
+    drawPad1();
+    //dessiner le pad 2
+    drawPad2();
+    //dessiner la balle
+    drawBall();
+    //dessine le score du joueur 1
+    drawP1Score();
+    //dessine le score du joueur 2
+    drawP2Score();
+    //affiche qui a gagné et ce qu'il faut faire pour relancer une partie
+    gameOver();
+    
+    //si la partie est finie et que la souris est appuyée, on relance le programme
+    if (gameFinished === true && mouseIsPressed) {
+        Program.restart();
+    }
+};
