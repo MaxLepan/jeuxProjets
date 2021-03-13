@@ -1,0 +1,203 @@
+background(0);
+
+// Direction
+var p1DirectionX = 0;
+var p1DirectionY = 0;
+
+// P1
+var p1PadW = 27;
+var p1PadH = 27;
+
+var p1PadX = width/2-p1PadW/2;
+var p1PadY = height-50;
+
+var p1Speed = 3;
+
+var enemyWidth = 30;
+var enemyHeight = 92;
+
+var shotWidth = 4;
+var shotHeight = 4;
+
+var shotCount = 0;
+var score = 0;
+
+var shot = false;
+
+
+var enemy = function(x, y) {
+   ellipse(x,y,enemyWidth,enemyHeight);    
+};
+
+var addEnemy = function() {
+   return [floor(random(enemyWidth,width-enemyWidth)),-enemyHeight,enemyWidth,-enemyHeight];    
+};
+
+var addShot = function (x,y) {
+    return [x,y,shotWidth,shotHeight];
+};
+
+var enemies = [];
+
+var shots = [];
+
+var m = millis()/1000 + 1;
+var y = 0;
+
+var currentInterval = 1;
+
+
+// game context
+var gameFinish = false;
+var winner = 0;
+var p1Points = 0;
+
+var hit = false;
+
+var drawP1 = function() {
+    fill(255, 0, 0);
+    rect(p1PadX, p1PadY, p1PadW, p1PadH);
+};
+
+// Calculer les nouvelle dirrection en fonction des directions (touche enfoncé/relevé)
+var adjustPosition = function() {
+    p1PadX = p1PadX+(p1DirectionX * p1Speed);
+    p1PadY = p1PadY+(p1DirectionY * p1Speed);
+};
+
+var rectIntersectRect = function (x1,y1,w1,h1,x2,y2,w2,h2) {
+    if (((x1 > x2) && (x1 < x2 + w2) && (y1 < y2) && (y1 > y2 + h2)) || ((x1 + w1 > x2) && (x1+w1 < x2 + w2) && (y1 < y2) && (y1 > y2 + h2)) || ((x1 + w1 > x2) && (x1+w1 < x2 + w2) && (y1+h1 < y2) && (y1+h1 > y2 + h2)) || ((x1 > x2) && (x1 < x2 + w2) && (y1+h1 < y2) && (y1+h1 > y2 + h2))){
+        
+        return true;
+    }
+    
+    return false;
+};
+
+var detectCollision = function () {
+    for (var i = 0; i<enemies.length; i++){
+        if (rectIntersectRect(p1PadX,p1PadY,p1PadW,p1PadH, enemies[i][0],enemies[i][1],enemies[i][2],enemies[i][3])){
+            gameFinish = true;
+        } 
+        
+        for (var j = 0; j<shots.length; j++){
+            if (rectIntersectRect(shots[j][0],shots[j][1],shots[j][2],shots[j][3], enemies[i][0],enemies[i][1],enemies[i][2],enemies[i][3])){
+                enemies.splice(i,1);
+                shots.splice(j,1);
+                score = score+150;
+                //le son ici fait freeze le jeu
+                //playSound(getSound("retro/hit2"));
+            }
+        }
+    }
+    
+    
+};
+
+
+var draw = function() {
+     background(0, 0, 0);
+     
+     if (!gameFinish) {
+         fill(255);
+         var t = millis()/1000;
+         
+         if (t > m) {
+             enemies.push(addEnemy());
+             currentInterval = floor(random(1,5));
+             m = millis()/1000 + currentInterval;
+         }
+         
+         
+         if (shot) {
+             shots.push(addShot(p1PadX+p1PadW/2, p1PadY));
+             shot = false;
+         }
+         
+         var indexOfShotsToRemove = [];
+         
+         for (var i = 0; i<shots.length; i+=1) {
+            shots[i][1] = shots[i][1]-5;
+            if (shots[i][1] < 0 - shotHeight) {
+                indexOfShotsToRemove.push(i);
+            }
+            rect(shots[i][0],shots[i][1],shots[i][2],shots[i][3]);
+         }
+         
+         
+         var indexOfEnemiesToRemove = [];
+         
+         for (var i = 0; i<enemies.length; i+=1) {
+            enemies[i][1] = enemies[i][1]+1;
+            if (enemies[i][1] > height + enemyHeight) {
+                indexOfEnemiesToRemove.push(i);
+            }
+            rect(enemies[i][0],enemies[i][1],enemies[i][2],enemies[i][3]);
+         }
+         
+         for (var i = 0; i<indexOfEnemiesToRemove.length; i+=1) {
+             enemies.splice(indexOfEnemiesToRemove,1);
+         }
+         
+         for (var i = 0; i<indexOfShotsToRemove.length; i+=1) {
+             shots.splice(indexOfShotsToRemove,1);
+         }
+         
+         adjustPosition();
+         drawP1();
+         detectCollision();
+         
+     } else {
+     
+     fill(255);
+     textSize(15);
+     
+     
+     
+     textAlign(CENTER,CENTER);
+     text("Game over",width/2,height/2);
+     
+     }
+     textAlign(LEFT,CENTER);
+     text("Shots Fired : "+shotCount,10,15);
+     text("Score : "+score,10,30);
+     
+};
+
+
+// gestion des touches  
+keyPressed = function() {
+    if (key.toString() === 'z') {
+        p1DirectionY = -1; 
+    }
+    if (key.toString() === 's') {
+        p1DirectionY = 1;
+    }
+    if (key.toString() === 'q') {
+        p1DirectionX = -1;
+    }
+    if (key.toString() === 'd') {
+        p1DirectionX = 1;
+    }
+};
+keyReleased = function() {
+    if (key.toString() === 'z') {
+        p1DirectionY = 0; 
+    }
+    if (key.toString() === 's') {
+        p1DirectionY = 0;
+    }
+    if (key.toString() === 'q') {
+        p1DirectionX = 0;
+    }
+    if (key.toString() === 'd') {
+        p1DirectionX = 0;
+    }
+    
+    if (keyCode.toString() === '32') {
+        shot = true;
+        shotCount++;
+        playSound(getSound("retro/laser1"));
+    }
+};
+
