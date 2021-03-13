@@ -6,4 +6,4 @@
 
 [Le lien du Pong](https://www.khanacademy.org/computer-programming/pong1/6736787747061760)
 
-[Le lien du Zelda-like](https://www.khanacademy.org/computer-programming/projet-driv-de-pokmon-like-combat-added/5953439003000832)
+[Le lien du Zelda-like](https://www.khanacademy.org/computer-programming/zeldapokemon-like/5953439003000832)
