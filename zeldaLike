@@ -641,24 +641,16 @@ var drawKombatBg = function () {
 };
 
 var drawKombatTexts = function () {
-
-    
     
     fill(255, 255, 255);
     strokeWeight(5);
     stroke(0, 0, 0);
     rect(brickW, brickH * 6, brickW * 6, brickH * 2);
-    fill(255);
     textAlign(LEFT, TOP);
-    
     
     
     rect(brickW,brickW*6,brickW *6 /2, brickH);
     
-    fill(255);
-    if (attack2Bool) {
-        fill(255, 0, 0);
-    }
     rect(brickW*4,brickW*6,brickW *6 /2, brickH);
     
     if (attackCounter >= 17) {
@@ -1512,7 +1504,7 @@ var debugTools = function () {
     //text(attack1Bool,10,50);
     //text(attack2Bool,10,70);
     //text(attackCounter,10,90);
-    text(randomPokemon, 10, 10);
+    //text(randomPokemon, 10, 10);
     //text(kombatBool,10,30);
     //text(moveBool,10,50);
     //text(enemyAttack,50,10);
