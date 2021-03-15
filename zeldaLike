@@ -171,7 +171,7 @@ var arWorldPanel5 = [[1,1,1,0,1,0,1,1],
 var arCity1 = [[0,0,0,1,1,1,1,1],
                [0,0,0,1,0,0,0,4],
                [1,1,1,1,0,0,0,0],
-               [0,0,0,0,1,0,0,1],
+               [0,0,0,0,0,0,0,1],
                [0,0,0,0,1,1,1,1],
                [0,0,0,0,0,0,1,1],
                [0,0,0,0,0,0,1,1],
@@ -533,7 +533,7 @@ keyPressed = function () {
             if (activePanel[playerPos[1]-1][playerPos[0]] !== 1){
                 playerPos[1] = playerPos[1] - 1;
                 if (soundBool) {
-                    //playSound(getSound("rpg/step-heavy"));
+                    playSound(getSound("rpg/step-heavy"));
                 }
             }
         }
@@ -541,7 +541,7 @@ keyPressed = function () {
             if (activePanel[playerPos[1]+1][playerPos[0]] !== 1){
                 playerPos[1] = playerPos[1] + 1;
                 if (soundBool) {
-                    //playSound(getSound("rpg/step-heavy"));
+                    playSound(getSound("rpg/step-heavy"));
                 }
             }
         }
@@ -549,7 +549,7 @@ keyPressed = function () {
             if ((activePanel[playerPos[1]][playerPos[0]-1] !== 1) &&(playerPos[0]-1 > -1)){
                 playerPos[0] = playerPos[0] - 1;
                 if (soundBool) {
-                    //playSound(getSound("rpg/step-heavy"));
+                    playSound(getSound("rpg/step-heavy"));
                 }
             }
         }
@@ -557,7 +557,7 @@ keyPressed = function () {
             if ((activePanel[playerPos[1]][playerPos[0]+1] !== 1) && (playerPos[0]+1 < activePanel.length)){
                 playerPos[0] = playerPos[0] + 1;
                 if (soundBool) {
-                    //playSound(getSound("rpg/step-heavy"));
+                    playSound(getSound("rpg/step-heavy"));
                 }
             }
         }
@@ -768,7 +768,7 @@ var getItem = function (){
         activePanel[playerPos[1]][playerPos[0]] = 0;
         activePanelDraw[playerPos[1]][playerPos[0]] = 0;
         if (soundBool){
-            //playSound(getSound("rpg/metal-chime"));
+            playSound(getSound("rpg/metal-chime"));
         }
         
         inventoryContent[0] = 2;
@@ -778,7 +778,7 @@ var getItem = function (){
         house1Key = true;
         activePanelDraw[playerPos[1]][playerPos[0]] = 0;
         if (soundBool){
-            //playSound(getSound("rpg/metal-chime"));
+            playSound(getSound("rpg/metal-chime"));
         }
         
         inventoryContent[1] = 17;
@@ -788,7 +788,7 @@ var getItem = function (){
         greenGemsCounter++;
         activePanelDraw[playerPos[1]][playerPos[0]] = 0;
         if (soundBool){
-            //playSound(getSound("rpg/metal-chime"));
+            playSound(getSound("rpg/metal-chime"));
         }
         
         inventoryContent[2] = 26;
@@ -797,7 +797,7 @@ var getItem = function (){
         orangeGemsCounter++;
         activePanelDraw[playerPos[1]][playerPos[0]] = 0;
         if (soundBool){
-            //playSound(getSound("rpg/metal-chime"));
+            playSound(getSound("rpg/metal-chime"));
         }
         
         inventoryContent[3] = 28;
@@ -1015,7 +1015,7 @@ var upgradeToPokemon = function (){
         pokemon = true;
         
         if (soundBool){
-            //playSound(getSound("rpg/battle-spell"));
+            playSound(getSound("rpg/battle-spell"));
         }
     } else if ((activePanel === arHouse1) && (drawArHouse1[playerPos[1]][playerPos[0]] === 7 ) && (pokemon === false) && (pokemonEvo1 === false)) {
         drawTexts("You need "+(2-blueGemsCounter)+" more blue gem(s) to get the \nPokémon");
@@ -1030,7 +1030,7 @@ var upgradeToPokemon = function (){
             pokemonEvo1 = true;
             
             if (soundBool){
-                //playSound(getSound("rpg/battle-spell"));
+                playSound(getSound("rpg/battle-spell"));
             }
         }
     }
@@ -1176,7 +1176,11 @@ var kombat = function () {
             
             arWorldPanel5[1][4] = 1;
             drawArWorldPanel5[1][4] = 31;
+            evo1Hp = 120;
         }
+        
+        npc3PokemonHp = 130;
+        evo1Hp = 120;
     }
     
 };
@@ -1193,28 +1197,27 @@ var kombatStart = function () {
         npc3Pokemon();
     }
     
-    //popMatrix();
-    //scale(-1,1);
+   pushMatrix();
+   scale(-1,1);
     if (randomPokemon === 0){
-        image(getImage("avatars/aqualine-tree"), -100,150, 500,500);
+        image(getImage("avatars/aqualine-tree"), 100,150,-500,500);
     } else if (randomPokemon === 1) {
-        image(getImage("avatars/duskpin-tree"), -100,150, 500,500);
+        image(getImage("avatars/duskpin-tree"), -300,50, 500,500);
     } else if (randomPokemon === 2) {
-        image(getImage("avatars/leafers-tree"), -100,150, 500,500);
+        image(getImage("avatars/leafers-tree"), -300,50, 500,500);
     } else if (randomPokemon === 3) {
-        image(getImage("avatars/piceratops-tree"), -100,150, 500,500);
+        image(getImage("avatars/piceratops-tree"), 100,150,-500,500);
     } else if (randomPokemon === 4) {
-        image(getImage("avatars/primosaur-tree"), -100,150, 500,500);
+        image(getImage("avatars/primosaur-tree"), -300,50, 500,500);
     } else if (randomPokemon === 5) {
-        image(getImage("avatars/starky-tree"), -100,150, 500,500);
+        image(getImage("avatars/starky-tree"), -360,150, 500,500);
     }
-    //scale(-1,1);
-    //pushMatrix();
-    
+    popMatrix();
     
     
     kombat();
     drawKombatTexts();
+    
     
     
 };
@@ -1367,7 +1370,7 @@ var worldToDraw = function () {
         playerPos = [1, 7];
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
     } 
     if ((activePanel === arWorldPanel1) && (arWorldPanel1[playerPos[1]][playerPos[0]] === 4)){
@@ -1376,7 +1379,7 @@ var worldToDraw = function () {
         playerPos = [6, 3];
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
     } 
     if ((activePanel === arCity1) && (arCity1[playerPos[1]][playerPos[0]] === 3)){
@@ -1385,7 +1388,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArWorldPanel1;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
         if (npc2DialogBool){
             npc2DialogBool = false;
@@ -1397,7 +1400,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArWorldPanel5;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
         if (npc2DialogBool){
             npc2DialogBool = false;
@@ -1409,7 +1412,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArCity1;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
         if (npc3DialogBool) {
             npc3DialogBool = false;
@@ -1424,7 +1427,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArWorldPanel1;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
     }
     if ((activePanel === arCity1) && (drawArCity1[playerPos[1]][playerPos[0]] === 18)){
@@ -1433,7 +1436,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArHouse1;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
         if (npc2DialogBool){
             npc2DialogBool = false;
@@ -1446,7 +1449,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArCity1;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
         if (npc1DialogBool){
             npc1DialogBool = false;
@@ -1458,7 +1461,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArWorldPanel3;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
     }
     if ((activePanel === arWorldPanel3) && (arWorldPanel3[playerPos[1]][playerPos[0]] === 25)){
@@ -1467,7 +1470,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArWorldPanel2;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
     }
     if ((activePanel === arWorldPanel3) && (arWorldPanel3[playerPos[1]][playerPos[0]] === 28)){
@@ -1476,7 +1479,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArWorldPanel4;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
     }
     if ((activePanel === arWorldPanel4) && (arWorldPanel4[playerPos[1]][playerPos[0]] === 25)){
@@ -1485,7 +1488,7 @@ var worldToDraw = function () {
         activePanelDraw = drawArWorldPanel3;
         drawBackground(activePanelDraw);
         if (soundBool){
-            //playSound(getSound("retro/jump2"));
+            playSound(getSound("retro/jump2"));
         }
     }
     
@@ -1509,6 +1512,7 @@ var debugTools = function () {
     //text(attack1Bool,10,50);
     //text(attack2Bool,10,70);
     //text(attackCounter,10,90);
+    text(randomPokemon, 10, 10);
     //text(kombatBool,10,30);
     //text(moveBool,10,50);
     //text(enemyAttack,50,10);
@@ -1566,8 +1570,9 @@ var setup = function () {
         destroyTrees2();
         
         if(kombatBool){
-            kombatStart();
+        kombatStart();
         }
+        
         kombat1Win();
         
         if (inventoryBool) {
@@ -1580,7 +1585,7 @@ var setup = function () {
         
         
         //debug
-        //debugTools();
+        debugTools();
         
     }
 };
